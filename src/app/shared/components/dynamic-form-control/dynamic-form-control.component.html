@@ -1,0 +1,60 @@
+<div [formGroup]="form">
+  <div class="mt-2" [ngSwitch]="formControls.controlType">
+    <div *ngSwitchCase="'text'">
+      <mat-form-field [class]="formControls.designClass">
+        <mat-label *ngIf="formControls.label">{{ formControls.label }}</mat-label>
+        <input matInput type="text" [formControlName]="formControls.key" [placeholder]="formControls.placeholder" />
+        <mat-error *ngIf="form.get(formControls.key).hasError('required')"> Field value is <strong>required</strong> </mat-error>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchCase="'number'">
+      <div
+        style="height: 100%; width: 100%; padding-top: 10px"
+        *ngIf="
+          formControls.key === 'amount' || formControls.key === 'igst' || formControls.key === 'cgst' || formControls.key === 'sgst';
+          else noAbove
+        "
+      >
+        <p *ngIf="currency !== '₹'">{{ form.get(formControls.key).value | currency: "CAD":"symbol-narrow" }}</p>
+        <p *ngIf="currency === '₹'">{{ form.get(formControls.key).value | totalAmount: "₹" }}</p>
+      </div>
+      <ng-template #noAbove>
+        <mat-form-field [class]="formControls.designClass">
+          <mat-label *ngIf="formControls.label">{{ formControls.label }}</mat-label>
+          <span matPrefix *ngIf="formControls.key === 'rate'">{{ currency }} &nbsp;</span>
+          <input
+            matInput
+            type="number"
+            [formControlName]="formControls.key"
+            [placeholder]="formControls.placeholder"
+            (keyup)="calculateAmount()"
+            (click)="calculateAmount()"
+            (change)="calculateAmount()"
+            min="0"
+          />
+          <mat-icon matSuffix *ngIf="formControls.key === 'gst'">%</mat-icon>
+          <mat-error *ngIf="form.get(formControls.key).hasError('required')"> Field value is <strong>required</strong> </mat-error>
+        </mat-form-field>
+      </ng-template>
+    </div>
+    <div *ngSwitchCase="'date'">
+      <mat-form-field [class]="formControls.designClass">
+        <mat-label *ngIf="formControls.label">{{ formControls.label }}</mat-label>
+        <input matInput [matDatepicker]="picker" [formControlName]="formControls.key" [placeholder]="formControls.placeholder" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchCase="'dropdown'">
+      <mat-form-field [class]="formControls.designClass">
+        <mat-label *ngIf="formControls.label">{{ formControls.label }}</mat-label>
+        <mat-select [formControlName]="formControls.key">
+          <mat-option *ngFor="let opt of formControls.options" [value]="opt.value">
+            {{ opt.key }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get(formControls.key).hasError('required')"> Field value is <strong>required</strong> </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

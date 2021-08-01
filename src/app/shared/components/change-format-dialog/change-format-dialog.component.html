@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Change Format</h2>
+<mat-dialog-content class="mat-typography">
+  <h3>Select Decimal Digits</h3>
+  <mat-radio-group aria-label="Select an option" [(ngModel)]="decimalPoint">
+    <mat-radio-button [value]="2">Select 2 (123.00)</mat-radio-button>
+    <mat-radio-button class="ml-2" [value]="3">Select 3 (123.000)</mat-radio-button>
+  </mat-radio-group>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="decimalPoint" cdkFocusInitial>Save</button>
+</mat-dialog-actions>

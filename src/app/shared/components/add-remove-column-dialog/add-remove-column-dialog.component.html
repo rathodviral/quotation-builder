@@ -1,0 +1,76 @@
+<form [formGroup]="dataForm">
+  <h2 mat-dialog-title>Edit Columns</h2>
+  <mat-dialog-content class="mat-typography">
+    <div class="row justify-content-end">
+      <div class="col-2">
+        <!-- <h3>Develop across all platforms</h3> -->
+        <button mat-raised-button color="primary" type="button" (click)="addHeader($event)">Add More</button>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-5"><h3>Column Name</h3></div>
+      <div class="col-5"><h3>Column Type</h3></div>
+    </div>
+    <div class="row">
+      <div class="col-12" formArrayName="billingColumns">
+        <div *ngFor="let item of billingColumns.controls; let i = index">
+          <div [formGroup]="item" class="row">
+            <div class="col-4">
+              <mat-form-field class="quotation-form-field__width">
+                <input matInput type="text" formControlName="label" (keyup)="labelChange(i)" (blur)="labelChange(i)" maxlength="15" />
+                <mat-error *ngIf="item.get('label').hasError('required')"> Field value is <strong>required</strong> </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-4">
+              <mat-form-field class="quotation-form-field__width">
+                <mat-select
+                  formControlName="type"
+                  [disabled]="
+                    item.get('key').value === 'item' ||
+                    item.get('key').value === 'quantity' ||
+                    item.get('key').value === 'rate' ||
+                    item.get('key').value === 'gst' ||
+                    item.get('key').value === 'sgst' ||
+                    item.get('key').value === 'igst' ||
+                    item.get('key').value === 'cgst' ||
+                    item.get('key').value === 'amount'
+                  "
+                >
+                  <mat-option *ngFor="let opt of inputTypeList" [value]="opt.value">
+                    {{ opt.key }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="item.get('value').hasError('required')"> Field value is <strong>required</strong> </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <button
+                *ngIf="
+                  !(
+                    item.get('key').value === 'item' ||
+                    item.get('key').value === 'quantity' ||
+                    item.get('key').value === 'rate' ||
+                    item.get('key').value === 'gst' ||
+                    item.get('key').value === 'sgst' ||
+                    item.get('key').value === 'igst' ||
+                    item.get('key').value === 'cgst' ||
+                    item.get('key').value === 'amount'
+                  )
+                "
+                mat-icon-button
+                color="primary"
+                (click)="removeHeader(i)"
+              >
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button type="button" (click)="onSubmit()">Save</button>
+  </mat-dialog-actions>
+</form>
